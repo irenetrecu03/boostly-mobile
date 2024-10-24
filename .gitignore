@@ -2,6 +2,7 @@ node_modules/
 .expo/
 dist/
 .vscode/
+.idea/
 %ProgramData%/
 npm-debug.*
 *.jks

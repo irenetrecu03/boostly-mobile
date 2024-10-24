@@ -37,6 +37,12 @@
         "projectId": "3deec935-05ad-4e75-8917-c67a2b05f1b1"
       }
     },
-    "owner": "irenetrecu"
+    "owner": "irenetrecu",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3deec935-05ad-4e75-8917-c67a2b05f1b1"
+    }
   }
 }
