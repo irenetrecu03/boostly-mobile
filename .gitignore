@@ -1,6 +1,8 @@
 node_modules/
 .expo/
 dist/
+.vscode/
+%ProgramData%
 npm-debug.*
 *.jks
 *.p8
