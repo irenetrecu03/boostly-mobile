@@ -2,7 +2,7 @@ node_modules/
 .expo/
 dist/
 .vscode/
-%ProgramData%
+%ProgramData%/
 npm-debug.*
 *.jks
 *.p8
