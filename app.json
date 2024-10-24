@@ -15,7 +15,10 @@
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.irenetrecu.boostly"
+      "bundleIdentifier": "com.irenetrecu.boostly",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
