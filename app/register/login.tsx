@@ -19,7 +19,7 @@ export default function Login() {
     if (result && result.error) {
       alert(result.msg);
     } else {
-      router.push("/home")
+      router.push("/(tabs)/home")
     }
   };
 
