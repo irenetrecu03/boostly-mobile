@@ -42,18 +42,12 @@ export default function Login() {
         <View style={styles.form}>
           <TextInput style={styles.input}
                     placeholder='Email' 
-                    onChangeText={(text: string) => {
-                      setEmail(text);
-                      console.log(email) }
-                    } 
+                    onChangeText={(text: string) => setEmail(text)}
                     value={email} />
           <TextInput style={styles.input} 
                     placeholder='password' 
                     secureTextEntry={true}
-                    onChangeText={(text: string) => {
-                      setPassword(text);
-                      console.log(password) }
-                    } 
+                    onChangeText={(text: string) => setPassword(text)} 
                     value={password} />
           <Button onPress={login} title='Sign up'></Button>
           <Button onPress={register} title='Create Account'></Button>

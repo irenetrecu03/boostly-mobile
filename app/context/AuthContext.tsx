@@ -10,7 +10,7 @@ interface AuthProps {
 }
 
 const TOKEN_KEY = 'my_jwt';
-export const API_URL = 'https://api.developbetterapps.com'
+export const API_URL = 'http://172.30.224.1:8000'
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -26,11 +26,26 @@ export const AuthProvider = ({ children }: any) => {
         authenticated: null,
     });
 
+    // Set up Axios interceptor
+    useEffect(() => {
+        const responseInterceptor = axios.interceptors.response.use(
+            response => response,
+            error => {
+                console.error('Axios Error:', error.response || error.message);
+                return Promise.reject(error);
+            }
+        );
+
+        // Cleanup function to remove the interceptor
+        return () => {
+            axios.interceptors.response.eject(responseInterceptor);
+        };
+    }, []);
+
     useEffect(() => {
         const loadToken = async () => {
             // Check if token is set when application loads
             const token = await SecureStore.getItemAsync(TOKEN_KEY);
-            console.log(token);
 
             if (token) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -43,27 +58,29 @@ export const AuthProvider = ({ children }: any) => {
     
     const register = async (email: string, password: string) => {
         try {
-            return await axios.post(`${API_URL}/users`, { email, password });
+            return await axios.post(`${API_URL}/user/register/`, { email, password });
         } catch (e) {
             return { error: true, msg: (e as any).response.data.msg };
         }
     }
 
     const login = async (email: string, password: string) => {
+        console.log("Logging in...")
+
         try {
-            const result = await axios.post(`${API_URL}/auth`, { email, password });
+            const result = await axios.post(`${API_URL}/user/login/`, { email, password });
+            console.log("Successfully logged in.")
 
-            console.log(result);
+            setAuthState({ token: result.data.access, authenticated: true});
+            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.access}`;
 
-            setAuthState({ token: result.data.token, authenticated: true});
-
-            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.token}`;
-
-            await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
+            await SecureStore.setItemAsync(TOKEN_KEY, result.data.access);
 
             return result;
+
         } catch (e) {
-            return { error: true, msg: (e as any).response.data.msg };
+            console.error("Login error:", e); // Log the error
+            return { error: true, msg: (e as any).response?.data?.msg || 'An error occurred' };
         }
     }
 
