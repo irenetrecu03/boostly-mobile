@@ -1,4 +1,4 @@
-import { View, StyleSheet, Button, TextInput, Text } from 'react-native';
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, TextInput, Text } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth, API_URL } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
@@ -41,7 +41,8 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
         <SafeAreaView style={styles.areaView}>
           <Text style={styles.title}>Register</Text>
           <Text style={styles.subtitle}>Enter your credentials.</Text>
@@ -79,14 +80,15 @@ export default function Login() {
 
           <View style={styles.buttonBox}>
               <CustomButton
-                      onPress={login}
+                      onPress={register}
                       title='Submit'
                       style={styles.button}
                       textStyle={styles.buttonText} />
           </View>
 
         </SafeAreaView>
-    </View>
+      </View>
+      </TouchableWithoutFeedback>
   );
 };
 
