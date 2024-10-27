@@ -59,11 +59,11 @@ export default function Login() {
 
             <View style={styles.linkBox}>
                 <Text style={styles.text}>
-                  Forgot your password?{' '}
+                  Forgot your password? Click{' '}
                   <Text style={styles.link} >here</Text>.
                 </Text>
                 <Text style={styles.text}>
-                  Not registered yet?{' '}
+                  Not registered yet? Click{' '}
                   <Text style={styles.link} onPress={() => router.push("/register/signup")} >here</Text>.
                 </Text>
             </View>
