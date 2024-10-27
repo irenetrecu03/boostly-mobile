@@ -30,7 +30,7 @@ const App = () => {
                         style={styles.button}
                         textStyle={styles.buttonText} />
                     <CustomButton
-                        onPress={() => {router.push("/register/login")}}
+                        onPress={() => {router.push("/register/signup")}}
                         title='Sign up'
                         style={styles.button}
                         textStyle={styles.buttonText} />
