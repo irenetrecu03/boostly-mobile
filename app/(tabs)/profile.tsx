@@ -1,13 +1,33 @@
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useRouter } from "expo-router";
 import { useAuth, API_URL } from '../context/AuthContext';
-import { useEffect } from 'react';
 
 export default function Home() {
+  const router = useRouter();
+  const { onLogout } = useAuth();
+
+  const logout = async () => {
+    if (!onLogout) {
+      alert("Logout function is not defined");
+      return;
+    }
+
+    const result = await onLogout!();
+
+    if (result && result.error) {
+      alert(result.msg);
+    } else {
+      router.push("/")
+    }
+  };
 
   return (
       <View style={styles.container}>
-          <Text>Home</Text>
+          <Button
+              onPress={logout}
+              title="Logout"
+              color="#fff"
+          />
       </View>
   );
 };
