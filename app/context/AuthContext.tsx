@@ -10,7 +10,7 @@ interface AuthProps {
 }
 
 const TOKEN_KEY = 'my_jwt';
-export const API_URL = 'https://4f01-145-94-146-53.ngrok-free.app'; //'http://172.30.224.1:8000'
+export const API_URL = 'https://e29f-92-64-56-27.ngrok-free.app'; //'http://172.30.224.1:8000'
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -60,7 +60,16 @@ export const AuthProvider = ({ children }: any) => {
         try {
             return await axios.post(`${API_URL}/user/register/`, { first_name, last_name, username, email, password });
         } catch (e) {
-            return { error: true, msg: (e as any).response.data.msg };
+            const errorMessage = (e as any)?.response?.data || { general: 'An error occurred' };
+            const errorResponse: { [key: string]: any } = { error: true };
+
+            Object.keys(errorMessage).forEach((key) => {
+                errorResponse[key] = Array.isArray(errorMessage[key]) 
+                    ? errorMessage[key].join(', ') 
+                    : errorMessage[key];
+            });
+
+            return errorResponse;
         }
     }
 

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, TextInput, Text } from 'react-native';
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, TextInput, Text, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth, API_URL } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
@@ -120,7 +120,11 @@ export default function Login() {
 
     const result = await onRegister!(name, surname, username, email, password);
     if (result && result.error) {
-      alert(result.msg);
+      if (result.email && result.email.length > 0) {
+        setEmailError(result.email.charAt(0).toUpperCase() + result.email.slice(1));
+        setIsEmail(false);
+      }
+      alert(result);
     } else {
       login();
     }
@@ -133,57 +137,59 @@ export default function Login() {
           <Text style={styles.title}>Register</Text>
           <Text style={styles.subtitle}>Enter your credentials.</Text>
 
-          <View style={styles.form}>
-            {(!isName) && <Text style={styles.errorText}>Enter a valid name.</Text>}
-            <TextInput style={isName ? styles.input : styles.inputInvalid}
-                      placeholder='First name'
-                      onChangeText={(text: string) => {
-                        setName(text);
-                      }}
-                      value={name} />
-            {(!isSurname) && <Text style={styles.errorText}>Enter a valid name.</Text>}
-            <TextInput style={isSurname ? styles.input : styles.inputInvalid}
-                      placeholder='Last name'
-                      onChangeText={(text: string) => {
-                        setSurname(text);
-                      }}
-                      value={surname} />
-            {(!isUsername) && <Text style={styles.errorText}>Enter a valid username.</Text>}
-            <TextInput style={isUsername ? styles.input : styles.inputInvalid}
-                      placeholder='Username'
-                      onChangeText={(text: string) => {
-                        setUsername(text);
-                      }}
-                      value={username} />
+          <ScrollView>
+            <View style={styles.form}>
+              {(!isName) && <Text style={styles.errorText}>Enter a valid name.</Text>}
+              <TextInput style={isName ? styles.input : styles.inputInvalid}
+                        placeholder='First name'
+                        onChangeText={(text: string) => {
+                          setName(text);
+                        }}
+                        value={name} />
+              {(!isSurname) && <Text style={styles.errorText}>Enter a valid name.</Text>}
+              <TextInput style={isSurname ? styles.input : styles.inputInvalid}
+                        placeholder='Last name'
+                        onChangeText={(text: string) => {
+                          setSurname(text);
+                        }}
+                        value={surname} />
+              {(!isUsername) && <Text style={styles.errorText}>Enter a valid username.</Text>}
+              <TextInput style={isUsername ? styles.input : styles.inputInvalid}
+                        placeholder='Username'
+                        onChangeText={(text: string) => {
+                          setUsername(text);
+                        }}
+                        value={username} />
 
-            {(!isEmail && emailError.length > 0) && <Text style={styles.errorText}>{emailError}</Text>}
-            <TextInput style={isEmail ? styles.input : styles.inputInvalid}
-                      placeholder='Email' 
-                      onChangeText={(text: string) => {
-                        setEmail(text);
-                        setIsEmail(true);
-                      }}
-                      value={email} />
+              {(!isEmail && emailError.length > 0) && <Text style={styles.errorText}>{emailError}</Text>}
+              <TextInput style={isEmail ? styles.input : styles.inputInvalid}
+                        placeholder='Email' 
+                        onChangeText={(text: string) => {
+                          setEmail(text);
+                          setIsEmail(true);
+                        }}
+                        value={email} />
 
-            {(!isPassword && passwordError.length > 0) && <Text style={styles.errorText}>{passwordError}</Text>}
-            <TextInput style={isPassword ? styles.input : styles.inputInvalid} 
-                      placeholder='Password' 
-                      secureTextEntry={true}
-                      onChangeText={(text: string) => {
-                        setPassword(text);
-                        setIsPassword(true);
-                      }} 
-                      value={password} />
+              {(!isPassword && passwordError.length > 0) && <Text style={styles.errorText}>{passwordError}</Text>}
+              <TextInput style={isPassword ? styles.input : styles.inputInvalid} 
+                        placeholder='Password' 
+                        secureTextEntry={true}
+                        onChangeText={(text: string) => {
+                          setPassword(text);
+                          setIsPassword(true);
+                        }} 
+                        value={password} />
 
-            {(!isRepassword) && <Text style={styles.errorText}>Passwords do not match.</Text>}
-            <TextInput style={isRepassword ? styles.input : styles.inputInvalid}
-                      placeholder='Confirm password'
-                      secureTextEntry={true}
-                      onChangeText={(text: string) => {
-                        setRepassword(text);
-                      }}
-                      value={repassword} />
-          </View>
+              {(!isRepassword) && <Text style={styles.errorText}>Passwords do not match.</Text>}
+              <TextInput style={isRepassword ? styles.input : styles.inputInvalid}
+                        placeholder='Confirm password'
+                        secureTextEntry={true}
+                        onChangeText={(text: string) => {
+                          setRepassword(text);
+                        }}
+                        value={repassword} />
+            </View>
+          </ScrollView>
 
           <View style={styles.linkBox}>
               <Text style={styles.text}>
@@ -215,12 +221,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   linkBox: {
-    gap: 5,
+    marginTop: 30,
   },
   areaView: {
     justifyContent: 'center',
     width: '80%',
     padding: 10,
+    maxHeight: '90%',
   },
   title: {
     fontSize: 35,
