@@ -14,9 +14,6 @@ export const CreateHabit = () => {
     const secondRowDays = ['Fri', 'Sat', 'Sun'];
 
     const toggleDay = (index: number) => {
-
-        console.log("Index: ", index);
-
         setDays(prevDays => {
             const newDays = [...prevDays];
             if (newDays[index] === 0) {
@@ -26,7 +23,6 @@ export const CreateHabit = () => {
             }
             return newDays; 
         });
-
     };
 
     return (
@@ -100,7 +96,6 @@ export const CreateHabit = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#FEF9EF',
         justifyContent: 'center',
         width: '75%',
@@ -122,6 +117,8 @@ const styles = StyleSheet.create({
     },
     inputTextBox: {
         marginBottom: 15,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     inputPoints: {
         height: 44,
@@ -173,7 +170,8 @@ const styles = StyleSheet.create({
     },
     deleteBox: {
         alignItems: 'flex-end',
-        marginTop: 20,
+        marginTop: 10,
+        padding: 20,
     }
 
 })
