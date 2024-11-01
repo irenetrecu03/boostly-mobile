@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import { useRouter } from "expo-router";
 import { useAuth, API_URL } from '../context/AuthContext';
 
-export default function Home() {
+export default function Profile() {
   const router = useRouter();
   const { onLogout } = useAuth();
 

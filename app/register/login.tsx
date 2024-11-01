@@ -65,7 +65,7 @@ export default function Login() {
       setIsEmail(false);
       setIsPassword(false);
     } else {
-      router.push("/(tabs)/home")
+      router.push("/(tabs)/today")
     }
   };
 
@@ -113,7 +113,8 @@ export default function Login() {
                         onPress={login}
                         title='Submit'
                         style={styles.button}
-                        textStyle={styles.buttonText} />
+                        textStyle={styles.buttonText}
+                        pressedStyle={styles.button} />
             </View>
 
           </SafeAreaView>

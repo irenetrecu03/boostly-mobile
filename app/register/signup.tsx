@@ -96,7 +96,7 @@ export default function Login() {
     if (result && result.error) {
       alert(result.msg);
     } else {
-      router.push("/(tabs)/home")
+      router.push("/(tabs)/today")
     }
   };
 
@@ -203,7 +203,8 @@ export default function Login() {
                       onPress={register}
                       title='Submit'
                       style={styles.button}
-                      textStyle={styles.buttonText} />
+                      textStyle={styles.buttonText}
+                      pressedStyle={styles.button} />
           </View>
 
         </SafeAreaView>

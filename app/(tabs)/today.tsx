@@ -3,11 +3,11 @@ import { useRouter } from "expo-router";
 import { useAuth, API_URL } from '../context/AuthContext';
 import { useEffect } from 'react';
 
-export default function Home() {
+export default function Today() {
 
   return (
       <View style={styles.container}>
-          <Text>Home</Text>
+          <Text>Today</Text>
       </View>
   );
 };
