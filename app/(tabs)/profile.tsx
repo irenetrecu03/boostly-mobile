@@ -26,7 +26,6 @@ export default function Profile() {
           <Button
               onPress={logout}
               title="Logout"
-              color="#fff"
           />
       </View>
   );
@@ -40,6 +39,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     text: {
-      color: '#fff',
+      color: '#0000',
     },
   });
