@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { useAuth, API_URL } from '../context/AuthContext';
 import { useState } from 'react';
 import { CreateHabit } from '@/components/CreateHabit';
+import SumIcon from 'react-native-vector-icons/Entypo';
 
 
 export default function HabitList() {
@@ -18,7 +19,14 @@ export default function HabitList() {
 
   return (
       <View style={styles.container}>
-          <Button title="Show Modal" onPress={openModal} />
+        
+          <View style={styles.titleBox}>
+            <Text style={styles.titleText}>Habits</Text>
+            <TouchableOpacity onPress={openModal}>
+              <SumIcon name="circle-with-plus" size={50}></SumIcon>
+            </TouchableOpacity>
+          </View>
+
           <Modal
             animationType="fade"
             transparent={true}
@@ -26,7 +34,7 @@ export default function HabitList() {
             onRequestClose={closeModal} 
           >
             <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} activeOpacity={1}>
-              <CreateHabit></CreateHabit>
+              <CreateHabit onDelete={closeModal}></CreateHabit>
             </TouchableOpacity>
           </Modal>
       </View>
@@ -40,6 +48,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
+    },
+    titleBox: {
+      flexDirection: 'row',
+    },
+    titleText: {
+      fontSize: 60,
     },
     text: {
       color: '#fff',

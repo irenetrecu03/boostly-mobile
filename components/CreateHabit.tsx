@@ -1,10 +1,17 @@
-import { Text, StyleSheet, ViewStyle, TextStyle, View, TextInput, TouchableWithoutFeedback, Keyboard, TouchableHighlight } from 'react-native';
+import React, { FC } from 'react';
+import { Text, StyleSheet, ViewStyle, TextStyle, View, TextInput, 
+    TouchableWithoutFeedback, Keyboard, TouchableHighlight, GestureResponderEvent, 
+    TouchableOpacity} from 'react-native';
 import { useState } from 'react';
 import CustomButton from './CustomButton';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import TrashIcon from 'react-native-vector-icons/FontAwesome5';
+
+interface CreateHabitProps {
+    onDelete: (event: GestureResponderEvent) => void;
+}
 
 
-export const CreateHabit = () => {
+export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
     const [ title, setTitle ] = useState('');
     const [ points, setPoints ] = useState('');
     const [ description, setDescription ] = useState('');
@@ -85,7 +92,9 @@ export const CreateHabit = () => {
                     </View>
 
                     <View style={styles.deleteBox}>
-                        <Icon name="trash" size={30} />
+                        <TouchableOpacity onPress={onDelete}>
+                            <TrashIcon name="trash" size={30} />
+                        </TouchableOpacity>
                     </View>
 
                 </View>
