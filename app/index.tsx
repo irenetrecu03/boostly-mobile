@@ -13,7 +13,7 @@ const App = () => {
 
     useEffect(() => {
         if (authState?.authenticated) {
-            router.push("/home");
+            router.push("/today");
         } 
     }, [authState]);
 
@@ -28,12 +28,14 @@ const App = () => {
                         onPress={() => {router.push("/register/login")}}
                         title='Log In'
                         style={styles.button}
-                        textStyle={styles.buttonText} />
+                        textStyle={styles.buttonText} 
+                        pressedStyle={styles.button} />
                     <CustomButton
                         onPress={() => {router.push("/register/signup")}}
                         title='Sign up'
                         style={styles.button}
-                        textStyle={styles.buttonText} />
+                        textStyle={styles.buttonText} 
+                        pressedStyle={styles.button} />
                 </View>
 
             </SafeAreaView>

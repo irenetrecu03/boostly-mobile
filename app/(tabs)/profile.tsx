@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import { useRouter } from "expo-router";
 import { useAuth, API_URL } from '../context/AuthContext';
 
-export default function Home() {
+export default function Profile() {
   const router = useRouter();
   const { onLogout } = useAuth();
 
@@ -26,7 +26,6 @@ export default function Home() {
           <Button
               onPress={logout}
               title="Logout"
-              color="#fff"
           />
       </View>
   );
@@ -35,11 +34,11 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#25292e',
+      backgroundColor: '#FEF9EF',
       alignItems: 'center',
       justifyContent: 'center',
     },
     text: {
-      color: '#fff',
+      color: '#0000',
     },
   });
