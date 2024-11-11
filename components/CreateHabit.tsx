@@ -1,10 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Text, StyleSheet, ViewStyle, TextStyle, View, TextInput, 
     TouchableWithoutFeedback, Keyboard, TouchableHighlight, GestureResponderEvent, 
     TouchableOpacity} from 'react-native';
 import { useState } from 'react';
 import CustomButton from './CustomButton';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
+import axios from 'axios';
 
 interface CreateHabitProps {
     onDelete: (event: GestureResponderEvent) => void;
@@ -19,6 +20,26 @@ export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
 
     const firstRowDays = ['Mon', 'Tue', 'Wed', 'Thu'];
     const secondRowDays = ['Fri', 'Sat', 'Sun'];
+
+    const API_URL = 'https://boostly-app.up.railway.app';
+
+    const createHabitRequest = async (name: string, description: string, days: JSON, points: number) => {
+        try {
+            const result = await axios.post(`${API_URL}/user/habits/`, 
+                { name, description, days, points },
+            {
+                headers: {
+                    //Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return result.data;
+        } catch (e) {
+            console.error("Could not create habit: ", e);
+            throw e;
+        }
+    }
 
     const toggleDay = (index: number) => {
         setDays(prevDays => {
@@ -92,9 +113,14 @@ export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
                     </View>
 
                     <View style={styles.deleteBox}>
-                        <TouchableOpacity onPress={onDelete}>
-                            <TrashIcon name="trash" size={30} />
+                        <TouchableOpacity style={styles.deleteArea} onPress={onDelete}>
+                            <TrashIcon name="trash" size={35} />
                         </TouchableOpacity>
+                        <CustomButton title="Save"
+                                    onPress={() => console.log("saved")}
+                                    style={styles.saveButton}
+                                    textStyle={styles.saveButtonText}
+                        />
                     </View>
 
                 </View>
@@ -178,9 +204,30 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     deleteBox: {
-        alignItems: 'flex-end',
+        alignContent: 'space-between',
+        flexDirection: 'row',
         marginTop: 10,
         padding: 20,
+    },
+    saveButton: {
+        padding: 15,
+        margin: 5,
+        borderRadius: 30,
+        backgroundColor: '#FF865E',
+        height: 50,
+        width: 80,
+        textAlign: 'center',
+        justifyContent: 'center',
+    },
+    saveButtonText: {
+        color: '#fff',
+        fontSize: 16,
+    },
+    deleteArea: {
+        width: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 130,
     }
 
 })
