@@ -1,23 +1,27 @@
 import React, { FC, useEffect } from 'react';
-import { Text, StyleSheet, ViewStyle, TextStyle, View, TextInput, 
+import { Alert, Text, StyleSheet, ViewStyle, TextStyle, View, TextInput, 
     TouchableWithoutFeedback, Keyboard, TouchableHighlight, GestureResponderEvent, 
     TouchableOpacity} from 'react-native';
-import { useState } from 'react';
 import CustomButton from './CustomButton';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 
 interface CreateHabitProps {
-    onDelete: (event: GestureResponderEvent) => void;
+    title: string;
+    setTitle: React.Dispatch<React.SetStateAction<string>>;
+    points: string;
+    setPoints: React.Dispatch<React.SetStateAction<string>>;
+    description: string;
+    setDescription: React.Dispatch<React.SetStateAction<string>>;
+    days: number[];
+    setDays: React.Dispatch<React.SetStateAction<number[]>>;
+
+    onDelete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
-export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
-    const [ title, setTitle ] = useState('');
-    const [ points, setPoints ] = useState('');
-    const [ description, setDescription ] = useState('');
-    const [ days, setDays ] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]);
-
+export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, setPoints, description, setDescription,
+    days, setDays, onDelete }) => {
     const firstRowDays = ['Mon', 'Tue', 'Wed', 'Thu'];
     const secondRowDays = ['Fri', 'Sat', 'Sun'];
 
@@ -53,6 +57,30 @@ export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
         });
     };
 
+    const handleDelete = () => {
+        Alert.alert(
+            "Discard Changes?",
+            "Are you sure you want to discard your changes?",
+            [
+                {
+                    text: "No",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                    },
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        onDelete(false);
+                        setTitle('');
+                        setPoints('');
+                        setDescription('');
+                        setDays([0, 0, 0, 0, 0, 0, 0]);
+                    }
+                }
+            ]
+        );
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
@@ -76,6 +104,7 @@ export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
                                     style={styles.button}
                                     textStyle={styles.buttonText}
                                     pressedStyle={styles.buttonPressed}
+                                    isPressed={days[index] == 1 ? true : false}
                                 />
                                 ))}
                         </View>
@@ -88,6 +117,7 @@ export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
                                     style={styles.button}
                                     textStyle={styles.buttonText}
                                     pressedStyle={styles.buttonPressed}
+                                    isPressed={days[index + 4] == 1 ? true : false}
                                 />
                             ))}
                         </View>
@@ -113,7 +143,7 @@ export const CreateHabit: FC<CreateHabitProps> = ({ onDelete }) => {
                     </View>
 
                     <View style={styles.deleteBox}>
-                        <TouchableOpacity style={styles.deleteArea} onPress={onDelete}>
+                        <TouchableOpacity style={styles.deleteArea} onPress={handleDelete}>
                             <TrashIcon name="trash" size={35} />
                         </TouchableOpacity>
                         <CustomButton title="Save"

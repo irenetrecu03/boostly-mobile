@@ -8,20 +8,15 @@ interface CustomButtonProps {
     style?: ViewStyle;
     textStyle?: TextStyle;
     pressedStyle?: ViewStyle;
+
+    isPressed?: boolean;
 }
 
-export const CustomButton: FC<CustomButtonProps> = ({ onPress, title, style, textStyle, pressedStyle }) => {
-  const [ isPressed, setPressed ] = useState(false);
-
-  const handlePressIn = () => {
-    setPressed(!isPressed);
-  }
-
+export const CustomButton: FC<CustomButtonProps> = ({ onPress, title, style, textStyle, pressedStyle, isPressed }) => {
   return (
     <TouchableOpacity 
             style={[styles.button, style, isPressed && pressedStyle]} 
             onPress={onPress}
-            onPressIn={handlePressIn}
             >
       <Text style={[styles.buttonText, textStyle]}>{title}</Text>
     </TouchableOpacity>

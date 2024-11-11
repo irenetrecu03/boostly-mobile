@@ -9,6 +9,11 @@ import SumIcon from 'react-native-vector-icons/Entypo';
 export default function HabitList() {
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [ title, setTitle ] = useState('');
+  const [ points, setPoints ] = useState('');
+  const [ description, setDescription ] = useState('');
+  const [ days, setDays ] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]);
+
   const openModal = () => {
     setModalVisible(true);
   };
@@ -34,7 +39,15 @@ export default function HabitList() {
             onRequestClose={closeModal} 
           >
             <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} activeOpacity={1}>
-              <CreateHabit onDelete={closeModal}></CreateHabit>
+              <CreateHabit onDelete={setModalVisible} 
+                          title={title}
+                          setTitle={setTitle}
+                          points={points}
+                          setPoints={setPoints}
+                          days={days}
+                          setDays={setDays}
+                          description={description}
+                          setDescription={setDescription} />
             </TouchableOpacity>
           </Modal>
       </View>
