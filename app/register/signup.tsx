@@ -1,8 +1,7 @@
 import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, TextInput, Text, ScrollView } from 'react-native';
 import { router } from 'expo-router';
-import { useAuth, API_URL } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CustomButton } from '../../components/CustomButton';
 
@@ -25,7 +24,6 @@ export default function Login() {
   const [ passwordError, setPasswordError] = useState('Enter a valid password.');
   const [ emailError, setEmailError ] = useState('Enter a valid email.');
   const { onLogin, onRegister } = useAuth();
-
 
   const validateName = () => {
     if (name.length == 0) {

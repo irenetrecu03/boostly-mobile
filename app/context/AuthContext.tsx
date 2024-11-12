@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
+import Constants from "expo-constants";
 
 interface AuthProps {
     authState?: { token: string | null; authenticated: boolean | null };
@@ -10,7 +11,8 @@ interface AuthProps {
 }
 
 const TOKEN_KEY = 'my_jwt';
-export const API_URL = 'https://boostly-app.up.railway.app';
+// export const API_URL = 'https://1384-92-64-56-27.ngrok-free.app';
+const API_URL = Constants.expoConfig?.extra?.apiUrl;
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {

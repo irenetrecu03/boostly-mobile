@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, Keyboard, TouchableWithoutFeedback, TextInput } from 'react-native';
 import { router } from 'expo-router';
-import { useAuth, API_URL } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CustomButton } from '../../components/CustomButton';
+
 
 export default function Login() {
   const [ email, setEmail ] = useState('');
