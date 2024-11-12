@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Alert, StyleSheet, View, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity} from 'react-native';
 import CustomButton from './CustomButton';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
@@ -7,26 +7,27 @@ import TrashIcon from 'react-native-vector-icons/FontAwesome5';
 interface CreateHabitProps {
     title: string;
     setTitle: React.Dispatch<React.SetStateAction<string>>;
-    points: number;
-    setPoints: React.Dispatch<React.SetStateAction<number>>;
+    points: string;
+    setPoints: React.Dispatch<React.SetStateAction<string>>;
     description: string;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     days: number[];
     setDays: React.Dispatch<React.SetStateAction<number[]>>;
 
     onDelete: React.Dispatch<React.SetStateAction<boolean>>;
+    successToast?: () => void;
+    failToast?: () => void;
 
     createHabit?: (name: string, description: string, days: Record<string, number>, points: number) => Promise<any>;
 }
 
 
 export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, setPoints, description, setDescription,
-    days, setDays, onDelete, createHabit }) => {
+    days, setDays, onDelete, createHabit, successToast, failToast }) => {
+
     const firstRowDays = ['Mon', 'Tue', 'Wed', 'Thu'];
     const secondRowDays = ['Fri', 'Sat', 'Sun'];
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-    const [pointsText, setPointsText] = useState('');
 
     const toggleDay = (index: number) => {
         setDays(prevDays => {
@@ -55,7 +56,7 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
                     onPress: () => {
                         onDelete(false);
                         setTitle('');
-                        setPoints(0);
+                        setPoints('');
                         setDescription('');
                         setDays([0, 0, 0, 0, 0, 0, 0]);
                     }
@@ -72,19 +73,19 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
                 return acc;
             }, {} as Record<string, number>);
 
-            createHabit(title, description, daysObject, points)
+            createHabit(title, description, daysObject, Number(points))
                 .then(response => {
-                    console.log("Habit created successfully:", response);
-                })
-                .catch(error => {
-                    console.error("Error creating habit:", error);
-                }).finally(() => {
+                    if (successToast) successToast(); else console.log("Habit created successfully:", response);
                     onDelete(false);
+
                     setTitle('');
-                    setPoints(0);
+                    setPoints('');
                     setDescription('');
                     setDays([0, 0, 0, 0, 0, 0, 0]);
-                });
+                })
+                .catch(error => {
+                    if (failToast) failToast(); else console.error("Could not create habit:", error);
+                })
         }
     };
 
@@ -134,10 +135,9 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
                         <TextInput style={styles.inputPoints}
                                     placeholder='Enter points' 
                                     onChangeText={(text: string) => {
-                                        setPoints(Number(text));
-                                        setPointsText(text);
+                                        setPoints(text);
                                     }}
-                                    value={pointsText} />
+                                    value={points} />
                     </View>
 
                     <View style={styles.inputTextBox} >
@@ -162,7 +162,9 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
                     </View>
 
                 </View>
+
             </View>
+
         </TouchableWithoutFeedback>
     );
 };
