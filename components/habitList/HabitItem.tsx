@@ -84,7 +84,10 @@ const styles = StyleSheet.create({
         paddingLeft: 25,
         paddingRight: 50,
 
-        height: '50%',
+        marginTop: 10,
+        marginBottom: 10,
+
+        height: 90,
         width: '100%',
     },
     titleText: {

@@ -21,3 +21,14 @@ export const createHabitRequest = async (name: string, description: string, days
         throw e;
     }
 }
+
+export const getHabitsRequest = async () => {
+    try {
+        const result = await axios.get(`${API_URL}/user/habits/`);
+
+        return result.data;
+    } catch (e) {
+        console.error("Could not retrieve habits: ", e)
+        throw e;
+    }
+}

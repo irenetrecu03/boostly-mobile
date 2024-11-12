@@ -1,14 +1,17 @@
-import { View, Text, StyleSheet, Button,  Modal, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { View, Text, StyleSheet, Button,  Modal, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { useState, useEffect } from 'react';
 import { CreateHabit } from '@/components/habitList/CreateHabit';
 import SumIcon from 'react-native-vector-icons/Entypo';
-import { createHabitRequest } from '../api/apiRequests';
+import { createHabitRequest, getHabitsRequest } from '../api/apiRequests';
 import Toast from 'react-native-toast-message'
 import { HabitItem } from '@/components/habitList/HabitItem';
+import { HabitModel, parseDaysToList } from '@/models/HabitModel';
 
 
 export default function HabitList() {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [ habits, setHabits ] = useState<HabitModel[]>([]);
 
   const [ title, setTitle ] = useState('');
   const [ points, setPoints ] = useState('');
@@ -43,6 +46,22 @@ export default function HabitList() {
     });
   };
 
+  useEffect(() => {
+    getHabitsRequest().then(response => {
+        const newHabits = response
+          .map((habit: { id: number; name: string; points: number; description: string; days: Record<string, number>; }) => ({
+            id: habit.id,
+            name: habit.name,
+            points: habit.points.toString(),
+            description: habit.description,
+            days: parseDaysToList(habit.days),
+          }));
+
+        setHabits(newHabits);
+    })
+
+  }, [])
+
   return (
       <View style={styles.container}>
         
@@ -74,16 +93,22 @@ export default function HabitList() {
                         failToast={showFailToast} />
           </Modal>
 
-          <View style={styles.listContainer}>
-            <HabitItem
-              habitID={1}
-              title='Walk 10k steps'
-              points='20'
-              description='Walk 10k steps every day'
-              days={[1, 1, 1, 1, 1, 1, 1]}
-              daysSummary='Every day'
-            />
-          </View>
+          <SafeAreaView style={styles.listContainer}>
+            <ScrollView style={styles.listScroll}>
+              <View style={{ height: 20 }} />
+              {habits.map((habit, index) => (
+                <HabitItem
+                  key={index}
+                  habitID={habit.id}
+                  title={habit.name}
+                  points={habit.points}
+                  description={habit.description}
+                  days={habit.days}
+                  daysSummary='Every day'
+                />
+              ))}
+            </ScrollView>
+          </SafeAreaView>
 
       </View>
   );
@@ -114,6 +139,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     listContainer: {
-      width: '75%',
+      marginTop: 10,
+      height: '60%',
+      width: '80%',
+      alignContent: 'center',
+    },
+    listScroll: {
+      padding: 5,
     }
   });
