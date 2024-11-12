@@ -1,16 +1,17 @@
 import { View, Text, StyleSheet, Button,  Modal, TouchableOpacity } from 'react-native';
 import { useRouter } from "expo-router";
-import { useAuth, API_URL } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import { CreateHabit } from '@/components/CreateHabit';
 import SumIcon from 'react-native-vector-icons/Entypo';
+import { createHabitRequest } from '../api/apiRequests';
 
 
 export default function HabitList() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [ title, setTitle ] = useState('');
-  const [ points, setPoints ] = useState('');
+  const [ points, setPoints ] = useState(0);
   const [ description, setDescription ] = useState('');
   const [ days, setDays ] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]);
 
@@ -47,7 +48,8 @@ export default function HabitList() {
                           days={days}
                           setDays={setDays}
                           description={description}
-                          setDescription={setDescription} />
+                          setDescription={setDescription}
+                          createHabit={createHabitRequest} />
             </TouchableOpacity>
           </Modal>
       </View>

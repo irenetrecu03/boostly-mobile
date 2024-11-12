@@ -1,49 +1,32 @@
-import React, { FC, useEffect } from 'react';
-import { Alert, Text, StyleSheet, ViewStyle, TextStyle, View, TextInput, 
-    TouchableWithoutFeedback, Keyboard, TouchableHighlight, GestureResponderEvent, 
-    TouchableOpacity} from 'react-native';
+import React, { FC, useState } from 'react';
+import { Alert, StyleSheet, View, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity} from 'react-native';
 import CustomButton from './CustomButton';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
-import axios from 'axios';
+
 
 interface CreateHabitProps {
     title: string;
     setTitle: React.Dispatch<React.SetStateAction<string>>;
-    points: string;
-    setPoints: React.Dispatch<React.SetStateAction<string>>;
+    points: number;
+    setPoints: React.Dispatch<React.SetStateAction<number>>;
     description: string;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     days: number[];
     setDays: React.Dispatch<React.SetStateAction<number[]>>;
 
     onDelete: React.Dispatch<React.SetStateAction<boolean>>;
+
+    createHabit?: (name: string, description: string, days: Record<string, number>, points: number) => Promise<any>;
 }
 
 
 export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, setPoints, description, setDescription,
-    days, setDays, onDelete }) => {
+    days, setDays, onDelete, createHabit }) => {
     const firstRowDays = ['Mon', 'Tue', 'Wed', 'Thu'];
     const secondRowDays = ['Fri', 'Sat', 'Sun'];
+    const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-    const API_URL = 'https://boostly-app.up.railway.app';
-
-    const createHabitRequest = async (name: string, description: string, days: JSON, points: number) => {
-        try {
-            const result = await axios.post(`${API_URL}/user/habits/`, 
-                { name, description, days, points },
-            {
-                headers: {
-                    //Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            return result.data;
-        } catch (e) {
-            console.error("Could not create habit: ", e);
-            throw e;
-        }
-    }
+    const [pointsText, setPointsText] = useState('');
 
     const toggleDay = (index: number) => {
         setDays(prevDays => {
@@ -72,7 +55,7 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
                     onPress: () => {
                         onDelete(false);
                         setTitle('');
-                        setPoints('');
+                        setPoints(0);
                         setDescription('');
                         setDays([0, 0, 0, 0, 0, 0, 0]);
                     }
@@ -80,6 +63,30 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
             ]
         );
     }
+
+    const handleSave = () => {
+        if (createHabit) {
+            // Map `days` array to JSON object
+            const daysObject = dayNames.reduce((acc, day, index) => {
+                acc[day] = days[index];
+                return acc;
+            }, {} as Record<string, number>);
+
+            createHabit(title, description, daysObject, points)
+                .then(response => {
+                    console.log("Habit created successfully:", response);
+                })
+                .catch(error => {
+                    console.error("Error creating habit:", error);
+                }).finally(() => {
+                    onDelete(false);
+                    setTitle('');
+                    setPoints(0);
+                    setDescription('');
+                    setDays([0, 0, 0, 0, 0, 0, 0]);
+                });
+        }
+    };
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -127,9 +134,10 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
                         <TextInput style={styles.inputPoints}
                                     placeholder='Enter points' 
                                     onChangeText={(text: string) => {
-                                        setPoints(text);
+                                        setPoints(Number(text));
+                                        setPointsText(text);
                                     }}
-                                    value={points} />
+                                    value={pointsText} />
                     </View>
 
                     <View style={styles.inputTextBox} >
@@ -147,7 +155,7 @@ export const CreateHabit: FC<CreateHabitProps> = ({ title, setTitle, points, set
                             <TrashIcon name="trash" size={35} />
                         </TouchableOpacity>
                         <CustomButton title="Save"
-                                    onPress={() => console.log("saved")}
+                                    onPress={handleSave}
                                     style={styles.saveButton}
                                     textStyle={styles.saveButtonText}
                         />
@@ -163,7 +171,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#FEF9EF',
         justifyContent: 'center',
-        width: '75%',
+        width: '80%',
         borderRadius: 20,
     },
     titleBox: {
@@ -257,7 +265,7 @@ const styles = StyleSheet.create({
         width: 40,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 130,
+        marginRight: '53%',
     }
 
 })
