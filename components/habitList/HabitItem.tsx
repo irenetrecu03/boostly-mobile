@@ -4,6 +4,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { EditHabit } from './EditHabit';
 
 interface HabitItemProps {
+    habitID: number,
     title: string;
     points: string;
     description: string;
@@ -11,7 +12,7 @@ interface HabitItemProps {
     daysSummary: string,
 }
 
-export const HabitItem: FC<HabitItemProps> = ({ title, points, description, days, daysSummary }) => {
+export const HabitItem: FC<HabitItemProps> = ({ habitID, title, points, description, days, daysSummary }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const [habitTitle, setTitle] = useState(title);
@@ -53,8 +54,8 @@ export const HabitItem: FC<HabitItemProps> = ({ title, points, description, days
                 visible={modalVisible}
                 onRequestClose={closeModal}
             >
-                <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} activeOpacity={1}>
-                    <EditHabit 
+                <EditHabit
+                        habitID={habitID} 
                         title={habitTitle}
                         setTitle={setTitle}
                         points={habitPoints}
@@ -65,7 +66,6 @@ export const HabitItem: FC<HabitItemProps> = ({ title, points, description, days
                         setDays={setDays}
                         onDelete={setModalVisible}
                     />
-                </TouchableOpacity>
             </Modal>
 
         </TouchableOpacity>

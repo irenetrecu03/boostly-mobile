@@ -1,9 +1,10 @@
 import { View, Text, StyleSheet, Button,  Modal, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-import { CreateHabit } from '@/components/CreateHabit';
+import { CreateHabit } from '@/components/habitList/CreateHabit';
 import SumIcon from 'react-native-vector-icons/Entypo';
 import { createHabitRequest } from '../api/apiRequests';
 import Toast from 'react-native-toast-message'
+import { HabitItem } from '@/components/habitList/HabitItem';
 
 
 export default function HabitList() {
@@ -58,23 +59,31 @@ export default function HabitList() {
             visible={modalVisible}
             onRequestClose={closeModal} 
           >
-            <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} activeOpacity={1}>
-              <CreateHabit onDelete={setModalVisible}
-                          title={title}
-                          setTitle={setTitle}
-                          points={points}
-                          setPoints={setPoints}
-                          days={days}
-                          setDays={setDays}
-                          description={description}
-                          setDescription={setDescription}
-                          createHabit={createHabitRequest}
-                          successToast={showSuccessToast}
-                          failToast={showFailToast} />
-            </TouchableOpacity>
+            
+            <CreateHabit onDelete={setModalVisible}
+                        title={title}
+                        setTitle={setTitle}
+                        points={points}
+                        setPoints={setPoints}
+                        days={days}
+                        setDays={setDays}
+                        description={description}
+                        setDescription={setDescription}
+                        createHabit={createHabitRequest}
+                        successToast={showSuccessToast}
+                        failToast={showFailToast} />
           </Modal>
 
-          <Toast />
+          <View style={styles.listContainer}>
+            <HabitItem
+              habitID={1}
+              title='Walk 10k steps'
+              points='20'
+              description='Walk 10k steps every day'
+              days={[1, 1, 1, 1, 1, 1, 1]}
+              daysSummary='Every day'
+            />
+          </View>
 
       </View>
   );
@@ -90,6 +99,7 @@ const styles = StyleSheet.create({
     },
     titleBox: {
       flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     titleText: {
       fontSize: 60,
@@ -103,4 +113,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
     },
+    listContainer: {
+      width: '75%',
+    }
   });
