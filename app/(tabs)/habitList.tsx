@@ -5,7 +5,7 @@ import SumIcon from 'react-native-vector-icons/Entypo';
 import { createHabitRequest, getHabitsRequest } from '../api/apiRequests';
 import Toast from 'react-native-toast-message'
 import { HabitItem } from '@/components/habitList/HabitItem';
-import { HabitModel, parseDaysToList } from '@/models/HabitModel';
+import { HabitModel, parseDaysToList, daysSummaryGenerator } from '@/models/HabitModel';
 
 
 export default function HabitList() {
@@ -112,7 +112,7 @@ export default function HabitList() {
                   points={habit.points}
                   description={habit.description}
                   days={habit.days}
-                  daysSummary='Every day'
+                  daysSummary={daysSummaryGenerator(habit.days)}
                   habitListUpdated={habitListUpdated}
                   setHabitListUpdated={setHabitListUpdated}
                 />
