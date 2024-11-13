@@ -11,10 +11,15 @@ import { HabitProps } from './CreateHabit';
 export interface ExtendedHabitProps extends Omit<HabitProps, 'createHabit'> {
     habitID: number;
     modifyHabit?: (id: number, name: string, description: string, days: Record<string, number>, points: number) => Promise<any>;
+    deleteHabit?: (id: number) => Promise<any>;
+
+    successToastMsg?: (props: any) => void;
+    failToastMsg?: (props: any) => void;
 }
 
 export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, points, setPoints, description, setDescription,
-    days, setDays, onDelete, modifyHabit, successToast, failToast }) => {
+    days, setDays, onDelete, modifyHabit, deleteHabit, successToastMsg, failToastMsg, 
+    habitListUpdated, setHabitListUpdated }) => {
 
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -36,6 +41,24 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
         });
     };
 
+    const deleteHabitRequest = () => {
+        if (deleteHabit) {
+            deleteHabit(habitID)
+                .then(response => {
+                    setHabitListUpdated(!habitListUpdated);
+                    if (successToastMsg) successToastMsg(`Habit ${title} deleted successfully!`); 
+                    else console.log("Habit deleted successfully:", response);
+                    onDelete(false);
+                })
+                .catch(error => {
+                    if (failToastMsg) failToastMsg(`Could not delete habit ${title}, try again later!`); 
+                    else console.error("Could not delete habit:", error);
+                })
+        } else {
+            onDelete(false);
+        }
+    }
+
     const handleDelete = () => {
         Alert.alert(
             "Delete Habit?",
@@ -48,25 +71,7 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
                     },
                 {
                     text: "Yes",
-                    onPress: () => onDelete(false)
-                }
-            ]
-        );
-    }
-
-    const handleDiscard = () => {
-        Alert.alert(
-            "Discard Changes?",
-            "Are you sure you want to discard your changes?",
-            [
-                {
-                    text: "No",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                    },
-                {
-                    text: "Yes",
-                    onPress: discardChanges
+                    onPress: deleteHabitRequest
                 }
             ]
         );
@@ -83,6 +88,7 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
 
     const editHabitRequest = () => {
         if (modifyHabit) {
+            // Transform numeric list into a JSON object
             const daysObject = dayNames.reduce((acc, day, index) => {
                 acc[day] = days[index];
                 return acc;
@@ -90,11 +96,14 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
 
             modifyHabit(habitID, title, description, daysObject, Number(points))
                 .then(response => {
-                    if (successToast) successToast(); else console.log("Habit created successfully:", response);
+                    setHabitListUpdated(!habitListUpdated);
+                    if (successToastMsg) successToastMsg(`Habit ${title} was changed!`);
+                    else console.log("Habit changed successfully:", response);
                     onDelete(false);
                 })
                 .catch(error => {
-                    if (failToast) failToast(); else console.error("Could not create habit:", error);
+                    if (failToastMsg) failToastMsg(`Could not change habit ${title}, try again later!`); 
+                    else console.error("Could not change habit:", error);
                 })
         } else {
             onDelete(false);

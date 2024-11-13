@@ -2,6 +2,8 @@ import React, { FC, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { EditHabit } from './EditHabit';
+import { deleteHabitRequest, modifyHabitRequest } from '@/app/api/apiRequests';
+import Toast from 'react-native-toast-message'
 
 interface HabitItemProps {
     habitID: number,
@@ -9,10 +11,19 @@ interface HabitItemProps {
     points: string;
     description: string;
     days: number[];
-    daysSummary: string,
+    daysSummary: string;
+    
+    habitListUpdated: boolean;
+    setHabitListUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const HabitItem: FC<HabitItemProps> = ({ habitID, title, points, description, days, daysSummary }) => {
+export type ToastProps = {
+    msg: string,
+}
+
+export const HabitItem: FC<HabitItemProps> = ({ habitID, title, points, description, days, daysSummary,
+    habitListUpdated, setHabitListUpdated
+ }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const [habitTitle, setTitle] = useState(title);
@@ -26,6 +37,26 @@ export const HabitItem: FC<HabitItemProps> = ({ habitID, title, points, descript
 
     const closeModal = () => {
         setModalVisible(false);
+    };
+
+    const showSuccessToast = ({ msg }: ToastProps) => {
+        Toast.show({
+            type: 'success',
+            text1: `${msg}`,
+            visibilityTime: 3000,
+            position: 'bottom',
+            bottomOffset: 30,
+        });
+    };
+
+    const showFailToast = ({ msg }: ToastProps) => {
+        Toast.show({
+            type: 'error',
+            text1: `${msg}`,
+            visibilityTime: 3000,
+            position: 'bottom',
+            bottomOffset: 30,
+        });
     };
 
     return (
@@ -65,6 +96,12 @@ export const HabitItem: FC<HabitItemProps> = ({ habitID, title, points, descript
                         days={habitDays}
                         setDays={setDays}
                         onDelete={setModalVisible}
+                        modifyHabit={modifyHabitRequest}
+                        deleteHabit={deleteHabitRequest}
+                        successToastMsg={showSuccessToast}
+                        failToastMsg={showFailToast}
+                        habitListUpdated={habitListUpdated}
+                        setHabitListUpdated={setHabitListUpdated}
                     />
             </Modal>
 

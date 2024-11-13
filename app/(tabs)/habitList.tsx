@@ -12,6 +12,7 @@ export default function HabitList() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [ habits, setHabits ] = useState<HabitModel[]>([]);
+  const [ habitListUpdated, setHabitListUpdated ] = useState(false);
 
   const [ title, setTitle ] = useState('');
   const [ points, setPoints ] = useState('');
@@ -46,21 +47,24 @@ export default function HabitList() {
     });
   };
 
-  useEffect(() => {
+  const getAllHabits = () => {
     getHabitsRequest().then(response => {
-        const newHabits = response
-          .map((habit: { id: number; name: string; points: number; description: string; days: Record<string, number>; }) => ({
-            id: habit.id,
-            name: habit.name,
-            points: habit.points.toString(),
-            description: habit.description,
-            days: parseDaysToList(habit.days),
-          }));
+      const newHabits = response
+        .map((habit: { id: number; name: string; points: number; description: string; days: Record<string, number>; }) => ({
+          id: habit.id,
+          name: habit.name,
+          points: habit.points.toString(),
+          description: habit.description,
+          days: parseDaysToList(habit.days),
+        }));
 
-        setHabits(newHabits);
+      setHabits(newHabits);
     })
+  }
 
-  }, [])
+  useEffect(() => {
+    getAllHabits();
+  }, [habitListUpdated])
 
   return (
       <View style={styles.container}>
@@ -90,7 +94,9 @@ export default function HabitList() {
                         setDescription={setDescription}
                         createHabit={createHabitRequest}
                         successToast={showSuccessToast}
-                        failToast={showFailToast} />
+                        failToast={showFailToast}
+                        habitListUpdated={habitListUpdated}
+                        setHabitListUpdated={setHabitListUpdated} />
           </Modal>
 
           <SafeAreaView style={styles.listContainer}>
@@ -105,6 +111,8 @@ export default function HabitList() {
                   description={habit.description}
                   days={habit.days}
                   daysSummary='Every day'
+                  habitListUpdated={habitListUpdated}
+                  setHabitListUpdated={setHabitListUpdated}
                 />
               ))}
             </ScrollView>

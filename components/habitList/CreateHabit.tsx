@@ -22,11 +22,15 @@ export interface HabitProps {
     failToast?: () => void;
 
     createHabit?: (name: string, description: string, days: Record<string, number>, points: number) => Promise<any>;
+
+    habitListUpdated: boolean;
+    setHabitListUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
 export const CreateHabit: FC<HabitProps> = ({ title, setTitle, points, setPoints, description, setDescription,
-    days, setDays, onDelete, createHabit, successToast, failToast }) => {
+    days, setDays, onDelete, createHabit, successToast, failToast, 
+    habitListUpdated, setHabitListUpdated }) => {
 
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -76,6 +80,9 @@ export const CreateHabit: FC<HabitProps> = ({ title, setTitle, points, setPoints
 
             createHabit(title, description, daysObject, Number(points))
                 .then(response => {
+                    // Trigger re-rendering of component
+                    setHabitListUpdated(!habitListUpdated);
+
                     if (successToast) successToast(); else console.log("Habit created successfully:", response);
                     onDelete(false);
 

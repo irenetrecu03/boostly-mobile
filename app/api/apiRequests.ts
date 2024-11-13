@@ -32,3 +32,31 @@ export const getHabitsRequest = async () => {
         throw e;
     }
 }
+
+export const modifyHabitRequest = async (habitId: number, name: string, description: string, days: Record<string, number>, points: number) => {
+    try {
+        const result = await axios.put(`${API_URL}/user/habits/update/${habitId}/`, 
+            { name, description, days, points },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        return result.data;
+
+    } catch (e) {
+        console.error("Could not modify habit: ", e);
+        throw e;
+    }
+}
+
+export const deleteHabitRequest = async(habitId: number) => {
+    try {
+        const result = await axios.delete(`${API_URL}/user/habits/delete/${habitId}/`);
+        return result.data;
+    } catch (e) {
+        console.error("Could not delete habit: ", e);
+        throw e;
+    }
+}
