@@ -23,6 +23,9 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
 
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
+    const [ pointsError, setPointsError ] = useState('');
+    const [ invalidPoints, setInvalidPoints ] = useState(false);
+
     // Store the initial values when the component mounts
     const [initialTitle] = useState(title);
     const [initialPoints] = useState(points);
@@ -87,6 +90,14 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
     }
 
     const editHabitRequest = () => {
+        const parsePoints = parseInt(points);
+
+        if (isNaN(parsePoints)) {
+            setInvalidPoints(true);
+            setPointsError("Points should be a valid number");
+            return
+        }
+
         if (modifyHabit) {
             // Transform numeric list into a JSON object
             const daysObject = dayNames.reduce((acc, day, index) => {
@@ -100,6 +111,8 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
                     if (successToastMsg) successToastMsg(`Habit ${title} was changed!`);
                     else console.log("Habit changed successfully:", response);
                     onDelete(false);
+                    setPointsError('');
+                    setInvalidPoints(false);
                 })
                 .catch(error => {
                     if (failToastMsg) failToastMsg(`Could not change habit ${title}, try again later!`); 
@@ -146,6 +159,8 @@ export const EditHabit: FC<ExtendedHabitProps> = ({ habitID, title, setTitle, po
                             <HabitPoints
                                 points={points}
                                 setPoints={setPoints}
+                                isInvalid={invalidPoints}
+                                pointsError={pointsError}
                             />
                             <HabitDescription 
                                 description={description}
