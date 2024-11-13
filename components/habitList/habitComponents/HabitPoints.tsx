@@ -1,15 +1,18 @@
 import React, { FC } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 
 interface HabitPointsProps {
     points: string;
     setPoints: React.Dispatch<React.SetStateAction<string>>;
+    isInvalid?: boolean;
+    pointsError?: string;
 }
 
-export const HabitPoints: FC<HabitPointsProps> = ({ points, setPoints }) => {
+export const HabitPoints: FC<HabitPointsProps> = ({ points, setPoints, isInvalid, pointsError }) => {
     return (
         <View style={styles.inputTextBox} >
-            <TextInput style={styles.inputPoints}
+            {(isInvalid && pointsError && pointsError.length > 0) && <Text style={styles.inputError}>{pointsError}</Text>}
+            <TextInput style={isInvalid ? styles.errorInput : styles.inputPoints}
                         placeholder='Enter points' 
                         onChangeText={(text: string) => {
                             setPoints(text);
@@ -25,6 +28,15 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
     },
+    errorInput: {
+        height: 44,
+        borderWidth: 1,
+        borderRadius: 4,
+        borderColor: '#EC524B',
+        padding: 10,
+        backgroundColor: '#fff',
+        width: '100%',
+    },
     inputPoints: {
         height: 44,
         borderWidth: 1,
@@ -34,4 +46,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%',
     },
+    inputError: {
+        fontSize: 14,
+        color: '#EC524B',
+    }
 })

@@ -58,6 +58,8 @@ export default function HabitList() {
           days: parseDaysToList(habit.days),
         }));
 
+      console.log(newHabits)
+
       setHabits(newHabits);
     })
   }
@@ -104,7 +106,7 @@ export default function HabitList() {
               <View style={{ height: 20 }} />
               {habits.map((habit, index) => (
                 <HabitItem
-                  key={index}
+                  key={habit.id}
                   habitID={habit.id}
                   title={habit.name}
                   points={habit.points}

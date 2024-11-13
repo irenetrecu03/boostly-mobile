@@ -1,10 +1,11 @@
-import React, { FC } from 'react';
-import { Alert, StyleSheet, View, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
+import React, { FC, useState } from 'react';
+import { Alert, StyleSheet, View, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Text, ViewStyle } from 'react-native';
 import { SelectDays } from './habitComponents/SelectDays';
 import { HabitTitle } from './habitComponents/HabitTitle';
 import { HabitPoints } from './habitComponents/HabitPoints';
 import { HabitDescription } from './habitComponents/HabitDescription';
 import { HabitSaveDelete } from './habitComponents/HabitSaveDelete';
+import { parse } from 'dotenv';
 
 
 export interface HabitProps {
@@ -33,6 +34,9 @@ export const CreateHabit: FC<HabitProps> = ({ title, setTitle, points, setPoints
     habitListUpdated, setHabitListUpdated }) => {
 
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    const [ pointsError, setPointsError ] = useState('');
+    const [ invalidPoints, setInvalidPoints ] = useState(false);
 
     const toggleDay = (index: number) => {
         setDays(prevDays => {
@@ -71,6 +75,14 @@ export const CreateHabit: FC<HabitProps> = ({ title, setTitle, points, setPoints
     }
 
     const handleSave = () => {
+        const parsePoints = parseInt(points);
+
+        if (isNaN(parsePoints)) {
+            setInvalidPoints(true);
+            setPointsError("Points should be a valid number");
+            return
+        }
+
         if (createHabit) {
             // Map `days` array to JSON object
             const daysObject = dayNames.reduce((acc, day, index) => {
@@ -90,6 +102,9 @@ export const CreateHabit: FC<HabitProps> = ({ title, setTitle, points, setPoints
                     setPoints('');
                     setDescription('');
                     setDays([0, 0, 0, 0, 0, 0, 0]);
+
+                    setPointsError('');
+                    setInvalidPoints(false);
                 })
                 .catch(error => {
                     if (failToast) failToast(); else console.error("Could not create habit:", error);
@@ -115,6 +130,8 @@ export const CreateHabit: FC<HabitProps> = ({ title, setTitle, points, setPoints
                         <HabitPoints
                             points={points}
                             setPoints={setPoints}
+                            isInvalid={invalidPoints}
+                            pointsError={pointsError}
                         />
 
                         <HabitDescription 
@@ -149,6 +166,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    inputError: {
+        fontSize: 14,
+        color: '#EC524B',
     },
 })
 
