@@ -20,7 +20,7 @@ export const HabitSaveDelete: FC<HabitSaveDeleteProps> = ({ handleSave, handleDe
                 <TrashIcon name="trash" size={35} />
             </TouchableOpacity>
 
-            {hasStats && <TouchableOpacity style={styles.deleteArea} onPress={handleDelete}>
+            {hasStats && <TouchableOpacity style={styles.deleteArea} >
                 <StatsIcon name="stats-chart" size={40} />
             </TouchableOpacity> }
 

@@ -67,13 +67,17 @@ export const HabitItem: FC<HabitItemProps> = ({ habitID, title, points, descript
                 <View style={styles.elementRow}>
 
                     <View style={styles.elementItem}>
-                        <AntDesignIcon name="clockcircle" size={22} />
-                        <Text style={styles.text}>{ daysSummary }</Text>
+                        <AntDesignIcon style={{marginRight: 4}} name="clockcircle" size={22} />
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>{ daysSummary } </Text>
+                        </View>
                     </View>
 
                     <View style={styles.elementItem}>
                         <AntDesignIcon name="star" size={22} />
-                        <Text style={styles.text}>{ habitPoints } points</Text>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>{ habitPoints } points</Text>
+                        </View>
                     </View>
 
                 </View>
@@ -141,11 +145,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignContent: 'center',
         alignItems: 'center',
+        textAlign: 'center'
     },
     text: {
         color: '#fff',
         fontSize: 15,
-        marginLeft: 8,
+        marginLeft: 8
+    },
+    textContainer: {
+        textAlign: 'center',
+        alignItems: 'center',
+        
+        width: 75,
     },
     modalOverlay: {
         flex: 1,
