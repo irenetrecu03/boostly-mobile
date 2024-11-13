@@ -71,10 +71,14 @@ export default function HabitList() {
   return (
       <View style={styles.container}>
         
+        <SafeAreaView style={{ height: '10%'}}></SafeAreaView>
+
+        <SafeAreaView style={styles.contentWrapper}>
+
           <View style={styles.titleBox}>
             <Text style={styles.titleText}>Habits</Text>
             <TouchableOpacity onPress={openModal}>
-              <SumIcon name="circle-with-plus" size={50}></SumIcon>
+              <SumIcon style={styles.sumIcon} name="circle-with-plus" size={60}></SumIcon>
             </TouchableOpacity>
           </View>
 
@@ -103,7 +107,7 @@ export default function HabitList() {
 
           <SafeAreaView style={styles.listContainer}>
             <ScrollView style={styles.listScroll}>
-              <View style={{ height: 20 }} />
+              {/* <View style={{ height: 20 }} /> */}
               {habits.map((habit, index) => (
                 <HabitItem
                   key={habit.id}
@@ -119,7 +123,8 @@ export default function HabitList() {
               ))}
             </ScrollView>
           </SafeAreaView>
-
+        
+        </SafeAreaView>
       </View>
   );
 };
@@ -132,12 +137,23 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       width: '100%',
     },
+    contentWrapper: {
+      marginTop: 70,
+      height: '90%',
+      width: '80%'
+    },
     titleBox: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      paddingLeft: 5,
+      marginTop: 20,
+    },
+    sumIcon: {
     },
     titleText: {
-      fontSize: 60,
+      fontSize: 55,
     },
     text: {
       color: '#fff',
@@ -149,9 +165,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     listContainer: {
-      marginTop: 10,
-      height: '60%',
-      width: '80%',
+      top: 20,
+      height: '75%',
+      width: '100%',
       alignContent: 'center',
     },
     listScroll: {
