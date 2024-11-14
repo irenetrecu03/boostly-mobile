@@ -1,21 +1,36 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
 import { useEffect } from 'react';
 import { CustomButton } from '../components/CustomButton';
-import { AppScreen } from '../components/AppScreen';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const App = () => {
-    const { authState, onLogout } = useAuth();
+    const { authState, onLogout, onRefresh } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-        if (authState?.authenticated) {
+        const checkRefresh = async () => {
+          const refreshResult = await onRefresh!();
+
+          if (refreshResult.error) {
+            // No refresh token or failed to refresh, force re-authentication
+            const logout = await onLogout!();
+
+            if (logout && logout.error) {
+              alert(logout.msg);
+              return;
+            }
+          } else {
+            console.log(refreshResult.msg);
             router.push("/today");
-        } 
-    }, [authState]);
+          }
+
+        }
+
+        checkRefresh();
+    }, []);
 
     return(
         <View style={styles.container}>
@@ -85,10 +100,5 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
   });
-
-
-  // backgroundColor: '#25292e',
-  //   alignItems: 'center',
-  //     justifyContent: 'center',
 
 export default App;
