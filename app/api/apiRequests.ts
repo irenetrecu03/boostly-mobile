@@ -1,12 +1,13 @@
 import axios from 'axios';
 import Constants from 'expo-constants';
+import api from './axiosSetup';
 
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl;
 
 export const createHabitRequest = async (name: string, description: string, days: Record<string, number>, points: number) => {
     try {
-        const result = await axios.post(`${API_URL}/user/habits/`, 
+        const result = await api.post(`${API_URL}/user/habits/`, 
             { name, description, days, points },
         {
             headers: {
@@ -24,7 +25,7 @@ export const createHabitRequest = async (name: string, description: string, days
 
 export const getHabitsRequest = async () => {
     try {
-        const result = await axios.get(`${API_URL}/user/habits/`);
+        const result = await api.get(`${API_URL}/user/habits/`);
 
         return result.data;
     } catch (e) {
@@ -35,7 +36,7 @@ export const getHabitsRequest = async () => {
 
 export const modifyHabitRequest = async (habitId: number, name: string, description: string, days: Record<string, number>, points: number) => {
     try {
-        const result = await axios.put(`${API_URL}/user/habits/update/${habitId}/`, 
+        const result = await api.put(`${API_URL}/user/habits/update/${habitId}/`, 
             { name, description, days, points },
         {
             headers: {
@@ -53,7 +54,7 @@ export const modifyHabitRequest = async (habitId: number, name: string, descript
 
 export const deleteHabitRequest = async(habitId: number) => {
     try {
-        const result = await axios.delete(`${API_URL}/user/habits/delete/${habitId}/`);
+        const result = await api.delete(`${API_URL}/user/habits/delete/${habitId}/`);
         return result.data;
     } catch (e) {
         console.error("Could not delete habit: ", e);

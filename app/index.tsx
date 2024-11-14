@@ -1,9 +1,8 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
 import { useEffect } from 'react';
 import { CustomButton } from '../components/CustomButton';
-import { AppScreen } from '../components/AppScreen';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
@@ -101,10 +100,5 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
   });
-
-
-  // backgroundColor: '#25292e',
-  //   alignItems: 'center',
-  //     justifyContent: 'center',
 
 export default App;
