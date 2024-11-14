@@ -58,8 +58,6 @@ export default function HabitList() {
           days: parseDaysToList(habit.days),
         }));
 
-      console.log(newHabits)
-
       setHabits(newHabits);
     })
   }

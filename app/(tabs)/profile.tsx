@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useRouter } from "expo-router";
-import { useAuth, API_URL } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Profile() {
   const router = useRouter();
