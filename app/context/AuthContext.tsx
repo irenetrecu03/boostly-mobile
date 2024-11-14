@@ -11,8 +11,8 @@ interface AuthProps {
     onRefresh?: () => Promise<any>;
 }
 
-const TOKEN_KEY = 'my_jwt';
-const REFRESH_KEY = 'refreshToken' 
+const TOKEN_KEY = Constants.expoConfig?.extra?.tokenKey;
+const REFRESH_KEY = Constants.expoConfig?.extra?.refreshKey;
 const API_URL = Constants.expoConfig?.extra?.apiUrl;
 const AuthContext = createContext<AuthProps>({});
 

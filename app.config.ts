@@ -7,5 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: 'boostly',
   extra: {
     apiUrl: process.env.API_URL,
+    tokenKey: process.env.TOKEN_KEY,
+    refreshKey: process.env.REFRESH_KEY,
   },
 });
