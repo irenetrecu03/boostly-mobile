@@ -8,10 +8,11 @@ interface AuthProps {
     onRegister?: (first_name: string, last_name: string, username: string, email: string, password: string) => Promise<any>;
     onLogin?: (email: string, password: string) => Promise<any>;
     onLogout?: () => Promise<any>;
+    onRefresh?: () => Promise<any>;
 }
 
 const TOKEN_KEY = 'my_jwt';
-// export const API_URL = 'https://1384-92-64-56-27.ngrok-free.app';
+const REFRESH_KEY = 'refreshToken' 
 const API_URL = Constants.expoConfig?.extra?.apiUrl;
 const AuthContext = createContext<AuthProps>({});
 
@@ -27,6 +28,30 @@ export const AuthProvider = ({ children }: any) => {
         token: null,
         authenticated: null,
     });
+
+    const refreshAccessToken = async () => {
+        const refreshToken = await SecureStore.getItemAsync('refreshToken');
+        if (!refreshToken) {
+            return { error: true, msg: 'Refresh token is not set' }
+        }  // Prompt reauthentication
+    
+        try {
+            const result = await axios.post(`${API_URL}/user/token/refresh/`, 
+                { refresh: refreshToken },
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+            setAuthState({ token: result.data.access, authenticated: true});
+            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.access}`;
+
+            await SecureStore.setItemAsync(TOKEN_KEY, JSON.stringify(result.data.access));
+
+            return { error: false, msg: "Token refreshed!"};
+
+        } catch (e) {
+            console.error("Error refreshing token: ", e);
+            return { error: true, msg: (e as any).response?.data?.msg || 'An error occurred' };
+        } // Prompt reauthentication
+    }
 
     // Set up Axios interceptor
     useEffect(() => {
@@ -46,15 +71,14 @@ export const AuthProvider = ({ children }: any) => {
 
     useEffect(() => {
         const loadToken = async () => {
-            // Check if token is set when application loads
             const token = await SecureStore.getItemAsync(TOKEN_KEY);
 
             if (token) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 setAuthState({token: token, authenticated: true});
             }
-        };
-
+        }
+            
         loadToken();
     }, [])
     
@@ -86,6 +110,7 @@ export const AuthProvider = ({ children }: any) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.access}`;
 
             await SecureStore.setItemAsync(TOKEN_KEY, result.data.access);
+            await SecureStore.setItemAsync(REFRESH_KEY, result.data.refresh);
 
             return result;
 
@@ -97,6 +122,7 @@ export const AuthProvider = ({ children }: any) => {
 
     const logout = async () => {
         await SecureStore.deleteItemAsync(TOKEN_KEY);
+        await SecureStore.deleteItemAsync(REFRESH_KEY);
 
         axios.defaults.headers.common['Authorization'] = '';
 
@@ -110,6 +136,7 @@ export const AuthProvider = ({ children }: any) => {
         onRegister: register,
         onLogin: login,
         onLogout: logout,
+        onRefresh: refreshAccessToken,
         authState
     };
 

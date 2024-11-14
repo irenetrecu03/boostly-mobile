@@ -8,14 +8,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const App = () => {
-    const { authState, onLogout } = useAuth();
+    const { authState, onLogout, onRefresh } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-        if (authState?.authenticated) {
+        const checkRefresh = async () => {
+          const refreshResult = await onRefresh!();
+
+          if (refreshResult.error) {
+            // No refresh token or failed to refresh, force re-authentication
+            const logout = await onLogout!();
+
+            if (logout && logout.error) {
+              alert(logout.msg);
+              return;
+            }
+          } else {
+            console.log(refreshResult.msg);
             router.push("/today");
-        } 
-    }, [authState]);
+          }
+
+        }
+
+        checkRefresh();
+    }, []);
 
     return(
         <View style={styles.container}>
